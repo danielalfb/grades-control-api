@@ -1,6 +1,6 @@
-"#grades-control-api"
+Desenvolvimento Full Stack IGTI
 
-Desafio Final do Módulo 2 - Desenvolvimento Full Stack IGTI
+# Desafio Final - Módulo 2
 
 ## Enunciado
 

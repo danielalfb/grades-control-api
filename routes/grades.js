@@ -155,12 +155,12 @@ router.post('/ranking', async (req, res) => {
 
     let subject = json.grades.filter((grade) => grade.subject === gradeReq.subject);
     let type = subject.filter((subject) => subject.type === gradeReq.type);
-    let bestGrades = type.sort((a, b) => {
-      a.value - b.value;
+    type.sort((a, b) => {
+      b.value - a.value;
     });
-    bestGrades = type.slice(0, 3);
+    type = type.slice(0, 3);
 
-    res.send(JSON.stringify(bestGrades));
+    res.send(JSON.stringify(type));
 
   } catch (err) {
     res.status(400).send({

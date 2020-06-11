@@ -121,27 +121,52 @@ router.post('/sum', async (req, res) => {
     );
   } catch (err) {
     res.status(400).send({
-      Error: err.message
+      error: err.message
     });
   }
 });
 
-// router.get('/', async (_, res) => {
-//   try {
-//     let data = await readFile(jsonURL, 'utf8');
-//     let json = JSON.parse(data);
+//endpoint para consultar a média das grades de determinado subject e type
+router.post('/average', async (req, res) => {
+  let gradeParams = req.body;
+  try {
+    let data = await readFile(jsonURL, 'utf8');
+    let json = JSON.parse(data);
 
-//     let grades = json.grades.filter(
-//       (grade) => grade.student === parseInt(req.params.student, 10)
-//     );
-//     let gradesCount = json.grades.value++;
+    let subject = json.grades.filter((grade) => grade.subject === gradeParams.subject);
+    let type = subject.filter((subject) => subject.type === gradeParams.type);
+    let gradeAverage = type.reduce((acc, curr) => acc + curr.value, 0) / type.length;
+    res.send(
+      `${gradeParams.subject}'s average grade is: ${gradeAverage.toFixed(2)}`
+    );
+  } catch (err) {
+    res.status(400).send({
+      error: err.message
+    });
+  }
+});
 
-//     res.send(gradesCount);
-//   } catch (err) {
-//     res.status(400).send({
-//       error: err.message,
-//     });
-//   }
-// });
+//endpoint para retornar as três melhores grades de acordo com determinado subject e type
+router.post('/ranking', async (req, res) => {
+  let gradeReq = req.body;
+  try {
+    let data = await readFile(jsonURL, 'utf8');
+    let json = JSON.parse(data);
+
+    let subject = json.grades.filter((grade) => grade.subject === gradeReq.subject);
+    let type = subject.filter((subject) => subject.type === gradeReq.type);
+    let bestGrades = type.sort((a, b) => {
+      a.value - b.value;
+    });
+    bestGrades = type.slice(0, 3);
+
+    res.send(JSON.stringify(bestGrades));
+
+  } catch (err) {
+    res.status(400).send({
+      Error: err.message
+    });
+  }
+});
 
 export default router;
